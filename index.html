@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScreenColor</title>
+    <style>
+        body {
+            color: black;
+        }
+        body.light {
+            color: white;
+        }
+
+        nav {
+            display: flex;
+            flex-direction: column;
+        }
+        nav fieldset {
+            display: flex;
+            flex-direction: row;
+        }
+        nav input {
+            background: none;
+            color: inherit;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <fieldset id="inputR"><legend>Red</legend><input type="range" id="sliderR" value="255" min="0" max="255"><input type="number" id="textR" value="255" min="0" max="255"></fieldset>
+        <fieldset id="inputG"><legend>Green</legend><input type="range" id="sliderG" value="255" min="0" max="255"><input type="number" id="textG" value="255" min="0" max="255"></fieldset>
+        <fieldset id="inputB"><legend>Blue</legend><input type="range" id="sliderB" value="255" min="0" max="255"><input type="number" id="textB" value="255" min="0" max="255"></fieldset>
+    </nav>
+    <h1>#ffffff</h1>
+    <script>
+        function setScreenColor(hex) {
+            document.querySelector("h1").textContent = `#${hex}`;
+            document.documentElement.style.backgroundColor = `#${hex}`;
+        }
+        function darkBackground(r, g, b) {
+            return (r * 299 + g * 587 + b * 114) <= 125000;
+        }
+        function setScreenColorRGB(r, g, b) {
+            if(r > 255) r = 255;
+            else if(r < 0) r = 0;
+
+            if(g > 255) g = 255;
+            else if(g < 0) g = 0;
+
+            if(b > 255) b = 255;
+            else if(b < 0) b = 0;
+
+            let hex = "";
+            hex += r > 0x0f ? Number(r).toString(16) : `0${Number(r).toString(16)}`;
+            hex += g > 0x0f ? Number(g).toString(16) : `0${Number(g).toString(16)}`;
+            hex += b > 0x0f ? Number(b).toString(16) : `0${Number(b).toString(16)}`;
+            setScreenColor(hex);
+
+            sliderR.value = r;
+            textR.value = r;
+            sliderG.value = g;
+            textG.value = g;
+            sliderB.value = b;
+            textB.value = b;
+
+            document.querySelector('body').classList.toggle('light', darkBackground(r, g, b));
+        }
+        document.querySelectorAll("input[type=range]").forEach(e => e.addEventListener("input", () => {
+            setScreenColorRGB(sliderR.value, sliderG.value, sliderB.value);
+        }));
+        document.querySelectorAll("input[type=number]").forEach(e => e.addEventListener("input", () => {
+            setScreenColorRGB(textR.value, textG.value, textB.value);
+        }));
+    </script>
+</body>
+</html>
